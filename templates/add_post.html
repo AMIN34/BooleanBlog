@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+    {% block title%} Create New Post {% endblock %}
+    {% block content %}
+        {% if user.is_authenticated %}
+            <h1>Add Blog Post</h1>
+            <br>
+            <div class="form-group">
+                <form action="" method="post" enctype="multipart/form-data"> {# Images uses different type of encoding, and tells the form to accept images #}
+                    {% csrf_token %}
+                    {{form.media}} {# This for the rich text editor #}
+                    {{form.as_p}} {# Django create forms for us with this command #}{# as_p put every line <p> tag, we can use other tags like ul, table #}
+                    <button class="btn btn-secondary">Post</button> <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+                </form>
+            </div>
+            <script>
+                var name = {{ user.id }};
+                document.getElementById("author_id").value = name;
+            </script>
+        {% else %}
+            <p>You must be logged in to view this content.</p>
+        {% endif %}
+    {% endblock %}

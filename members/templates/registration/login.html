@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title%} LogIn {% endblock %}
+
+{% block content %}
+    <h1>Login</h1>
+    <br>
+    <div class="form-group">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}} {# Django create forms for us with this command #}{# as_p put every line <p> tag, we can use other tags like ul, table #}
+            {% comment %} <input type="hidden" name="next" value="{{ request.GET.next }}"> {% endcomment %}
+            <button class="btn btn-secondary">Login</button>
+        </form>
+    </div> 
+
+{% endblock %}

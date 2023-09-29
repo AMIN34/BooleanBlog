@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+    {% block title%} {{post.title}} {% endblock %}
+
+
+    {% block content %}
+        <h1>{{post.title}}</h1>
+        <h5>By - {{post.author.first_name}} ({{post.author.email}}) - {{post.date}}</h3><a class="btn btn-outline-info btn-sm" href="{% url 'category' post.category|slugify %}">{{post.category}}</a>
+        <hr>
+        <br><br>
+        
+        <img src="{{ post.header_image.url }}" alt="image" > {# {{ post.header_image.url }} gives the full location of the image #}
+        {{post.body|safe}}  {# safe is used to escape HTMl, that is allowing HTML to be written in the blog text area#}
+        <br><br>
+        {% if user.is_authenticated %}
+            {% if user.id == post.author.id %}
+                <a href="{% url 'update_post' post.pk %}" class="btn btn-outline-info">Edit</a>
+                <a href="{% url 'delete_post' post.pk %}" class="btn btn-outline-danger">Delete</a>
+            {% else %}
+            {# sending the data to post_like, value is for which post is getting the like #}
+                <form action="{% url 'post_like' post.pk %}" method="post" style="display: inline-block;">
+                    {% csrf_token %}
+                    {% if liked %}
+                        <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn btn-danger">Unlike</button>
+                    {% else %}
+                        <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn btn-primary">Like</button>
+                    {% endif %}
+                    
+                </form>
+            {% endif %}
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn btn-primary">Login to Like</a>
+        {% endif %}
+        {{ post.total_likes }} {% if post.total_likes != 1 %}Likes{% else %}Like{% endif %}
+        <br><br><a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+    {% endblock content %}

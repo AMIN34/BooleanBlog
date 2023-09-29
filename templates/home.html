@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+    {% block title%} Homepage {% endblock %}
+
+    {% block content %}
+        <h1>Today's Post</h1>
+        {% for p in post_list %}
+            <hr>
+            <li>
+                <a href="{% url 'article' p.pk %}">{{p.title}}</a> {# linking and sending the post's primary to article.html #}
+                <br>By @{{p.author.first_name}} {{p.author.last_name}} - Posted at {{p.date}}
+                <a class="btn btn-outline-info btn-sm" href="{% url 'category' p.category|slugify %}">{{p.category}}</a>
+                <br>
+                {{p.body | truncatechars:500 |safe}} {# slice will only cut the line at the last limit charecter whereas truncatechars will put "..." at the end of the last charecter and don't cut a word in the middle #} {# safe is used to hide the html from the article text i.e you can HTMl code and post with it#}
+            </li>
+            {% if user.is_authenticated and user.id == p.author.id%}  {# If user is logged in #}
+                <small><a href="{% url 'update_post' p.pk %}">(Edit)</a></small>
+                <small><a href="{% url 'delete_post' p.pk %}">(Delete)</a></small>
+            {% endif %}
+            <br>
+        {% endfor %}
+        
+    {% endblock %}
+    
